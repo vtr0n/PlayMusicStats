@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 django = "*"
+django-rest-framework = "*"
+djangorestframework-jwt = "*"
+cryptography = "*"
+python-jose = "*"
 
 [requires]
 python_version = "3.7"
