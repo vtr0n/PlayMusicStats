@@ -11,6 +11,8 @@ django-rest-framework = "*"
 djangorestframework-jwt = "*"
 cryptography = "*"
 python-jose = "*"
+djongo = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"

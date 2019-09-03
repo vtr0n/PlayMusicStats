@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    container_name: gms-postgres-container
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: root
+
+  mongo:
+    container_name: gms-mongo-container
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    network_mode: bridge
