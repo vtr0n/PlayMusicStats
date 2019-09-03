@@ -36,7 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_jwt'
+    'rest_framework_jwt',
+    'backend.users',
+    'backend.stats',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +73,8 @@ WSGI_APPLICATION = 'backend.settings.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASE_ROUTERS = ('backend.settings.dbrouters.DBRouter',)
 
 DATABASES = {
     'default': {
