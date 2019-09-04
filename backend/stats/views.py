@@ -8,7 +8,6 @@ from collections import OrderedDict
 @api_view(['GET'])
 def get_stats(request):
     user_id = request.user
-
     obj = {
         'all_duration_sec': all_duration(user_id),
         'duration_by_day_sec': get_time_range_in_sec(user_id, 1),
@@ -30,15 +29,18 @@ def top_tracks(user_id):
     last_user_stats.sort(key=lambda x: x['playCount'], reverse=True)
     for i in range(5):
         try:
-            album_art_ref = last_user_stats[i]['albumArtRef'][0]['url']
+            try:
+                album_art_ref = last_user_stats[i]['albumArtRef'][0]['url']
+            except:
+                album_art_ref = ''
+            top_track_list.append({
+                'album_art_ref': album_art_ref,
+                'artist': last_user_stats[i]['artist'],
+                'title': last_user_stats[i]['title'],
+                'play_count': last_user_stats[i]['playCount'],
+            })
         except:
-            album_art_ref = ''
-        top_track_list.append({
-            'album_art_ref': album_art_ref,
-            'artist': last_user_stats[i]['artist'],
-            'title': last_user_stats[i]['title'],
-            'play_count': last_user_stats[i]['playCount'],
-        })
+            pass
     return top_track_list
 
 
@@ -67,7 +69,10 @@ def top_artists(user_id):
 
     top_artist_dict = []
     for i in range(5):
-        top_artist_dict.append(top_artists_list[i])
+        try:
+            top_artist_dict.append(top_artists_list[i])
+        except:
+            pass
 
     return top_artist_dict
 
@@ -136,10 +141,13 @@ def get_top_tracks(user_id, day_delta):
     list.sort(key=lambda x: x['play_count'], reverse=True)
 
     top_songs = []
-    # TODO может быть косяк
-    for i in range(5):
-        top_songs.append(list[i])
+    # TODO refactor all this views
 
+    for i in range(5):
+        try:
+            top_songs.append(list[i])
+        except:
+            pass
     return top_songs
 
 
@@ -191,8 +199,10 @@ def get_top_artists(user_id, day_delta):
 
     top_artists = []
     for i in range(5):
-        top_artists.append(top_artists_list[i])
-
+        try:
+            top_artists.append(top_artists_list[i])
+        except:
+            pass
     return top_artists
 
 

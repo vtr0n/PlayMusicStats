@@ -1,6 +1,7 @@
 import codecs
 import pickle
 from backend.users.models import UserSettings
+from backend.stats.models import PlayMusicStats
 from backend.users.serializers import UserSettingsSerializer
 from rest_framework import status
 from rest_framework.views import APIView
@@ -31,7 +32,10 @@ class UserSettingsView(APIView):
         serializer = UserSettingsSerializer(user_settings, data=request.data)
 
         if serializer.is_valid():
-            code = serializer.validated_data['code']
+            try:
+                code = serializer.validated_data['code']
+            except:
+                return Response('Code is empty', status=status.HTTP_400_BAD_REQUEST)
             try:
                 flow = OAuth2WebServerFlow(**Mobileclient._session_class.oauth._asdict())
                 credential = flow.step2_exchange(code)
@@ -39,14 +43,21 @@ class UserSettingsView(APIView):
 
                 gm = Mobileclient()
                 current_device = gm.get_device_ids(credential)[0]
+                library = gm.get_all_songs()
             except:
                 # TODO change response and connect it to frontend
-                return Response({'google play troubles'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response('Please enter the correct code or try again later', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             user_settings.credential = credential_picked
             user_settings.current_device = current_device
             user_settings.credential_is_valid = True
             serializer.save()
+
+            # TODO use celery?
+            new_stats = PlayMusicStats()
+            new_stats.user = request.user
+            new_stats.stats = library
+            new_stats.save()
 
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
