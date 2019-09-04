@@ -7,7 +7,7 @@ from django.dispatch import receiver
 class UserSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=256, default='')
-    credential = models.CharField(max_length=256, default='')
+    credential = models.CharField(max_length=4096, default='')
     credential_is_valid = models.BooleanField(default=False)
     current_device = models.CharField(max_length=256, default='')
 

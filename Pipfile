@@ -13,6 +13,8 @@ cryptography = "*"
 python-jose = "*"
 djongo = "*"
 psycopg2-binary = "*"
+gmusicapi = {editable = true,git = "https://github.com/vtr0n/gmusicapi",ref = "feature/get_device_ids"}
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"
