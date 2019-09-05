@@ -1,0 +1,17 @@
+stages:
+  - build
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+test_build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --pull -t $CONTAINER_TEST_IMAGE docker/backend/dev/Dockerfile
+    - docker push $CONTAINER_TEST_IMAGE
