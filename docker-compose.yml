@@ -1,9 +1,10 @@
-version: '3'
+version: '3.7'
 services:
   postgres:
     container_name: gms-postgres-container
     image: postgres
-    restart: always
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
@@ -12,6 +13,35 @@ services:
   mongo:
     container_name: gms-mongo-container
     image: mongo:latest
+    volumes:
+      - ./docker/mongo/data:/data/db
     ports:
       - 27017:27017
-    network_mode: bridge
+
+  backend:
+    container_name: gms-backend-container
+    build:
+      context: ./
+      dockerfile: ./docker/backend/dev/Dockerfile
+    command: "./entrypoint.sh"
+    # command: "./manage.py update_users_stats"
+    volumes:
+      - ./backend:/code/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - mongo
+
+  frontend:
+    container_name: gms-frontend-container
+    build:
+      context: ./
+      dockerfile: ./docker/frontend/dev/Dockerfile
+    volumes:
+      - ./frontend:/app
+    command: "npm run dev"
+    environment:
+      - HOST=0.0.0.0
+    ports:
+      - "8080:8080"

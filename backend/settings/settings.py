@@ -111,12 +111,13 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'postgres',
         'PORT': '5432',
     },
     'mongo': {
         'ENGINE': 'djongo',
         'NAME': 'gm_stats',
+        'HOST': 'mongo',
     }
 }
 
