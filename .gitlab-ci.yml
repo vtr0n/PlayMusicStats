@@ -18,7 +18,7 @@ vue-build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build --pull -t $VUE_TEST_IMAGE . -f docker/backend/dev/Dockerfile
+    - docker build --pull -t $VUE_TEST_IMAGE . -f docker/frontend/prod/Dockerfile
     - docker push $VUE_TEST_IMAGE
 
 django-build:
