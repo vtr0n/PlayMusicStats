@@ -21,6 +21,18 @@ vue-build:
     - docker build --pull -t $VUE_TEST_IMAGE . -f docker/frontend/prod/Dockerfile
     - docker push $VUE_TEST_IMAGE
 
+vue-release-image:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker pull $VUE_TEST_IMAGE
+    - docker tag $VUE_TEST_IMAGE $VUE_RELEASE_IMAGE
+    - docker push $VUE_RELEASE_IMAGE
+
 django-build:
   stage: build
   image: docker:stable
