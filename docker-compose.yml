@@ -25,6 +25,10 @@ services:
       dockerfile: ./docker/backend/dev/Dockerfile
     command: "./entrypoint.sh"
     # command: "./manage.py update_users_stats"
+    environment:
+      - DJANGO_PROJECT_SECRET=your_secret_here
+      - DJANGO_PROJECT_DEBUG=False
+      - DJANGO_ALLOWED_HOST=127.0.0.1
     volumes:
       - ./backend:/code/backend
     ports:
@@ -43,5 +47,6 @@ services:
     command: "npm run dev"
     environment:
       - HOST=0.0.0.0
+      - CALLBACK_REDIRECT='http://localhost:8080/callback'
     ports:
       - "8080:8080"

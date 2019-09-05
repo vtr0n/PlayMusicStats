@@ -3,3 +3,5 @@
 
 docker/mongo/data
 docker/postgres/data
+
+.env

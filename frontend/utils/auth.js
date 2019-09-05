@@ -6,7 +6,10 @@ const ACCESS_TOKEN_KEY = 'access_token';
 
 const CLIENT_ID = 'tnlMjimbEuNye055qr2C3Wd783M9z47A';
 const CLIENT_DOMAIN = 'dev-z912l6w0.eu.auth0.com';
-const REDIRECT = 'http://localhost:8080/callback';
+console.log(process.env);
+const REDIRECT = process.env.CALLBACK_REDIRECT;
+
+
 const SCOPE = 'openid profile';
 const AUDIENCE = 'https://django-vuejs-api';
 
