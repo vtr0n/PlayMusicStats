@@ -5,7 +5,21 @@ stages:
 
 variables:
   DJANGO_TEST_IMAGE: $CI_REGISTRY_IMAGE:DJANGO_$CI_COMMIT_REF_SLUG
-  DJANGO_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DJANGO_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:DJANGO_latest
+
+  VUE_TEST_IMAGE: $CI_REGISTRY_IMAGE:VUE_$CI_COMMIT_REF_SLUG
+  VUE_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:VUE_latest
+
+vue-build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --pull -t $VUE_TEST_IMAGE . -f docker/backend/dev/Dockerfile
+    - docker push $VUE_TEST_IMAGE
 
 django-build:
   stage: build
@@ -22,24 +36,26 @@ django-test:
   stage: test
   image: docker:stable
   services:
-  - docker:stable-dind
+    - docker:stable-dind
   before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-  - docker pull $DJANGO_TEST_IMAGE
-  - printenv | grep '^DJANGO_' > env.list
-  - docker run --env-file env.list $DJANGO_TEST_IMAGE ./manage.py test
+    - docker pull $DJANGO_TEST_IMAGE
+    - printenv | grep '^DJANGO_' > env.list
+    - docker run --env-file env.list $DJANGO_TEST_IMAGE ./manage.py test
 
 django-release-image:
   stage: release
   image: docker:stable
   services:
-  - docker:stable-dind
+    - docker:stable-dind
   before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-  - docker pull $DJANGO_TEST_IMAGE
-  - docker tag $DJANGO_TEST_IMAGE $DJANGO_RELEASE_IMAGE
-  - docker push $DJANGO_RELEASE_IMAGE
+    - docker pull $DJANGO_TEST_IMAGE
+    - docker tag $DJANGO_TEST_IMAGE $DJANGO_RELEASE_IMAGE
+    - docker push $DJANGO_RELEASE_IMAGE
 #  only:
 #  - master
+
+
