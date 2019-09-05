@@ -1,11 +1,12 @@
 stages:
   - build
+  - test
 
 variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DJANGO_TEST_IMAGE: DJANGO_$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  DJANGO_RELEASE_IMAGE: DJANGO_$CI_REGISTRY_IMAGE:latest
 
-test_build:
+django_build:
   stage: build
   image: docker:stable
   services:
@@ -13,5 +14,17 @@ test_build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE . -f docker/backend/dev/Dockerfile
-    - docker push $CONTAINER_TEST_IMAGE
+    - docker build --pull -t $DJANGO_TEST_IMAGE . -f docker/backend/dev/Dockerfile
+    - docker push $DJANGO_TEST_IMAGE
+
+django_test:
+  stage: test
+  image: docker:stable
+  services:
+  - docker:stable-dind
+  before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+  - docker pull $DJANGO_TEST_IMAGE
+  - printenv | grep '^DJANGO_' > env.list
+  - docker run --env-file env.list $DJANGO_TEST_IMAGE ./manage.py test
