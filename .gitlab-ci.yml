@@ -41,7 +41,7 @@ django-build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build --pull -t $DJANGO_TEST_IMAGE . -f docker/backend/dev/Dockerfile
+    - docker build --pull -t $DJANGO_TEST_IMAGE . -f docker/backend/prod/Dockerfile
     - docker push $DJANGO_TEST_IMAGE
 
 django-test:
