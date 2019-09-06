@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - release
+  - deploy
 
 variables:
   DJANGO_TEST_IMAGE: $CI_REGISTRY_IMAGE:DJANGO_$CI_COMMIT_REF_SLUG
@@ -70,4 +71,22 @@ django-release-image:
 #  only:
 #  - master
 
+deploy:
+  stage: deploy
+  image: gitlab/dind:latest
+  services:
+  - docker:stable-dind
+  before_script:
+  - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+  - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker-compose -f ${PROJECT_PATH}/docker-compose.prod.yml stop"
+  - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "bash -c 'cd ${PROJECT_PATH} && git fetch && git checkout ${CI_COMMIT_SHA:0:8}'"
+  - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY} && docker pull ${DJANGO_RELEASE_IMAGE} && docker pull ${VUE_RELEASE_IMAGE}"
+  - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY} && docker-compose -f ${PROJECT_PATH}/docker-compose.prod.yml up -d"
+#  only:
+#  - master
 
