@@ -5,4 +5,5 @@ module.exports = {
   VUE_AUTH0_CLIENT_ID: process.env.VUE_AUTH0_CLIENT_ID,
   VUE_AUTH0_API_IDENTIFIER: process.env.VUE_AUTH0_API_IDENTIFIER,
   VUE_AUTH0_DOMAIN: process.env.VUE_AUTH0_DOMAIN,
+  VUE_API_BASE_URL: process.env.VUE_API_BASE_URL,
 }

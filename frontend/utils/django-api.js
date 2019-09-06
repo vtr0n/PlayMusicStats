@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {getAccessToken} from './auth';
 
-console.log(process.env);
 const BASE_URL = process.env.VUE_API_BASE_URL;
 
 export {getAuthUrl, confirmCode, getUserInfo, getStats};
