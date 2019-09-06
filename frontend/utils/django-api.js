@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {getAccessToken} from './auth';
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = process.env.VUE_API_BASE_URL;
 
 export {getAuthUrl, confirmCode, getUserInfo, getStats};
 

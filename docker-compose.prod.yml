@@ -13,8 +13,7 @@ services:
   frontend:
     image: registry.gitlab.com/vtr0n/playmusicstats:VUE_latest
     command: "nginx -g 'daemon off;'"
-    environment:
-      - HOST=0.0.0.0
-      - REDIRECT_URL=http://localhost:80/callback
+    env_file: .env
     ports:
       - "80:80"
+      - "443:443"

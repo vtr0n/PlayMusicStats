@@ -18,7 +18,7 @@ vue-build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build --build-arg VUE_AUTH0_CLIENT_ID=${VUE_AUTH0_CLIENT_ID} --build-arg VUE_AUTH0_DOMAIN=${VUE_AUTH0_DOMAIN} --build-arg VUE_AUTH0_CALLBACK_REDIRECT=${VUE_AUTH0_CALLBACK_REDIRECT} --build-arg VUE_AUTH0_API_IDENTIFIER=${VUE_AUTH0_API_IDENTIFIER} --pull -t $VUE_TEST_IMAGE . -f docker/frontend/prod/Dockerfile
+    - docker build --build-arg VUE_AUTH0_CLIENT_ID=${VUE_AUTH0_CLIENT_ID} --build-arg VUE_AUTH0_DOMAIN=${VUE_AUTH0_DOMAIN} --build-arg VUE_AUTH0_CALLBACK_REDIRECT=${VUE_AUTH0_CALLBACK_REDIRECT} --build-arg VUE_AUTH0_API_IDENTIFIER=${VUE_AUTH0_API_IDENTIFIER} --build-arg VUE_API_BASE_URL=${VUE_API_BASE_URL} --pull -t $VUE_TEST_IMAGE . -f docker/frontend/prod/Dockerfile
     - docker push $VUE_TEST_IMAGE
 
 vue-release-image:
