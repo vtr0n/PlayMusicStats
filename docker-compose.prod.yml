@@ -33,5 +33,4 @@ services:
     command: "nginx -g 'daemon off;'"
     env_file: .env
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
