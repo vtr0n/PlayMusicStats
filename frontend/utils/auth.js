@@ -4,14 +4,12 @@ import auth0 from 'auth0-js';
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 
-const CLIENT_ID = 'tnlMjimbEuNye055qr2C3Wd783M9z47A';
-const CLIENT_DOMAIN = 'dev-z912l6w0.eu.auth0.com';
-console.log(process.env);
-const REDIRECT = process.env.CALLBACK_REDIRECT;
-
+const CLIENT_ID = process.env.VUE_AUTH0_CLIENT_ID;
+const CLIENT_DOMAIN = process.env.VUE_AUTH0_DOMAIN;
+const REDIRECT = process.env.VUE_AUTH0_CALLBACK_REDIRECT;
 
 const SCOPE = 'openid profile';
-const AUDIENCE = 'https://django-vuejs-api';
+const AUDIENCE = process.env.VUE_AUTH0_API_IDENTIFIER;
 
 
 var auth = new auth0.WebAuth({

@@ -72,9 +72,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-    'http://localhost'
+    os.environ['DJANGO_CORS_ORIGIN_WHITELIST'],
 )
 
 ROOT_URLCONF = 'backend.settings.urls'
@@ -157,8 +155,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH0_DOMAIN = 'dev-z912l6w0.eu.auth0.com'
-API_IDENTIFIER = 'https://django-vuejs-api'
+AUTH0_DOMAIN = os.environ['DJANGO_AUTH0_DOMAIN']
+API_IDENTIFIER = os.environ['DJANGO_AUTH0_API_IDENTIFIER']
+
 PUBLIC_KEY = None
 JWT_ISSUER = None
 
