@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  postgres:
+    container_name: gms-postgres-container
+    image: postgres
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: root
+
+  mongo:
+    container_name: gms-mongo-container
+    image: mongo:latest
+    volumes:
+      - ./docker/mongo/data:/data/db
+    ports:
+      - 27017:27017
+
+  backend:
+    image: registry.gitlab.com/vtr0n/playmusicstats:DJANGO_latest
+    command: "./entrypoint.sh"
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - mongo
+
+  frontend:
+    image: registry.gitlab.com/vtr0n/playmusicstats:VUE_latest
+    command: "nginx -g 'daemon off;'"
+    env_file: .env
+    ports:
+      - "8080:80"

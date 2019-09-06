@@ -1,0 +1,95 @@
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+variables:
+  DJANGO_TEST_IMAGE: $CI_REGISTRY_IMAGE:DJANGO_$CI_COMMIT_REF_SLUG
+  DJANGO_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:DJANGO_latest
+
+  VUE_TEST_IMAGE: $CI_REGISTRY_IMAGE:VUE_$CI_COMMIT_REF_SLUG
+  VUE_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:VUE_latest
+
+vue-build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --build-arg VUE_AUTH0_CLIENT_ID=${VUE_AUTH0_CLIENT_ID} --build-arg VUE_AUTH0_DOMAIN=${VUE_AUTH0_DOMAIN} --build-arg VUE_AUTH0_CALLBACK_REDIRECT=${VUE_AUTH0_CALLBACK_REDIRECT} --build-arg VUE_AUTH0_API_IDENTIFIER=${VUE_AUTH0_API_IDENTIFIER} --build-arg VUE_API_BASE_URL=${VUE_API_BASE_URL} --pull -t $VUE_TEST_IMAGE . -f docker/frontend/prod/Dockerfile
+    - docker push $VUE_TEST_IMAGE
+
+vue-release-image:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker pull $VUE_TEST_IMAGE
+    - docker tag $VUE_TEST_IMAGE $VUE_RELEASE_IMAGE
+    - docker push $VUE_RELEASE_IMAGE
+  only:
+    - master
+
+django-build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --pull -t $DJANGO_TEST_IMAGE . -f docker/backend/prod/Dockerfile
+    - docker push $DJANGO_TEST_IMAGE
+
+django-test:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker pull $DJANGO_TEST_IMAGE
+    - printenv | grep '^DJANGO_' > env.list
+    - docker run --env-file env.list $DJANGO_TEST_IMAGE ./manage.py test
+
+django-release-image:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker pull $DJANGO_TEST_IMAGE
+    - docker tag $DJANGO_TEST_IMAGE $DJANGO_RELEASE_IMAGE
+    - docker push $DJANGO_RELEASE_IMAGE
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  image: gitlab/dind:latest
+  services:
+    - docker:stable-dind
+  before_script:
+    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker-compose -f ${PROJECT_PATH}/docker-compose.prod.yml stop"
+    - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "bash -c 'cd ${PROJECT_PATH} && git fetch && git checkout ${CI_COMMIT_SHA:0:8}'"
+    - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY} && docker pull ${DJANGO_RELEASE_IMAGE} && docker pull ${VUE_RELEASE_IMAGE}"
+    - ssh ${DEPLOYMENT_USER}@${DEPLOYMENT_SERVER_IP} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY} && docker-compose -f ${PROJECT_PATH}/docker-compose.prod.yml up -d"
+  only:
+    - master
+

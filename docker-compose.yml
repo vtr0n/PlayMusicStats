@@ -24,7 +24,13 @@ services:
       context: ./
       dockerfile: ./docker/backend/dev/Dockerfile
     command: "./entrypoint.sh"
-    # command: "./manage.py update_users_stats"
+    environment:
+      - DJANGO_PROJECT_SECRET=your_secret_here
+      - DJANGO_PROJECT_DEBUG=True
+      - DJANGO_ALLOWED_HOST=127.0.0.1
+      - DJANGO_CORS_ORIGIN_WHITELIST=http://localhost:8080
+      - DJANGO_AUTH0_API_IDENTIFIER=https://django-vuejs-api
+      - DJANGO_AUTH0_DOMAIN=dev-z912l6w0.eu.auth0.com
     volumes:
       - ./backend:/code/backend
     ports:
@@ -43,5 +49,9 @@ services:
     command: "npm run dev"
     environment:
       - HOST=0.0.0.0
+      - VUE_AUTH0_CLIENT_ID='tnlMjimbEuNye055qr2C3Wd783M9z47A'
+      - VUE_AUTH0_DOMAIN='dev-z912l6w0.eu.auth0.com'
+      - VUE_AUTH0_CALLBACK_REDIRECT='http://localhost:8080/callback'
+      - VUE_AUTH0_API_IDENTIFIER='https://django-vuejs-api'
     ports:
       - "8080:8080"

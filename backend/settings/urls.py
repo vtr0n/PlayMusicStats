@@ -19,7 +19,7 @@ from backend.users.views import UserSettingsView, get_auth_url
 from backend.stats.views import get_stats
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+
     path('api/v1/user-info', UserSettingsView.as_view()),
     path('api/v1/get-auth-url', get_auth_url),
 

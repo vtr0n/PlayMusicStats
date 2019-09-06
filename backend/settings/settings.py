@@ -23,12 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-w7@c!k^0y5j+-t4sbsxhq)0vp_)x0ep0s#0!px2_6ndu3dd6e'
+SECRET_KEY = os.environ['DJANGO_PROJECT_SECRET']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if (os.environ['DJANGO_PROJECT_DEBUG']).lower() in ("yes", "true", "1") else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ['DJANGO_ALLOWED_HOST']]
 
 # Application definition
 
@@ -72,9 +72,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-    'http://localhost'
+    os.environ['DJANGO_CORS_ORIGIN_WHITELIST'],
 )
 
 ROOT_URLCONF = 'backend.settings.urls'
@@ -157,8 +155,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH0_DOMAIN = 'dev-z912l6w0.eu.auth0.com'
-API_IDENTIFIER = 'https://django-vuejs-api'
+AUTH0_DOMAIN = os.environ['DJANGO_AUTH0_DOMAIN']
+API_IDENTIFIER = os.environ['DJANGO_AUTH0_API_IDENTIFIER']
+
 PUBLIC_KEY = None
 JWT_ISSUER = None
 
