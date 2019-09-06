@@ -12,6 +12,7 @@ ENV VUE_AUTH0_API_IDENTIFIER $VUE_AUTH0_API_IDENTIFIER
 ARG VUE_API_BASE_URL
 ENV VUE_API_BASE_URL $VUE_API_BASE_URL
 
+RUN printenv
 COPY frontend/package*.json ./
 RUN npm set audit false
 RUN npm install
