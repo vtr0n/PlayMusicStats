@@ -10,13 +10,13 @@ services:
     environment:
       POSTGRES_PASSWORD: root
 
-    mongo:
-      container_name: gms-mongo-container
-      image: mongo:latest
-      volumes:
-        - ./docker/mongo/data:/data/db
-      ports:
-        - 27017:27017
+  mongo:
+    container_name: gms-mongo-container
+    image: mongo:latest
+    volumes:
+      - ./docker/mongo/data:/data/db
+    ports:
+      - 27017:27017
 
   backend:
     image: registry.gitlab.com/vtr0n/playmusicstats:DJANGO_latest
