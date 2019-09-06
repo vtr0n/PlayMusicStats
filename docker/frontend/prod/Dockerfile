@@ -1,5 +1,15 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
+
+ARG VUE_AUTH0_CLIENT_ID
+ENV VUE_AUTH0_CLIENT_ID $VUE_AUTH0_CLIENT_ID
+ARG VUE_AUTH0_DOMAIN
+ENV VUE_AUTH0_DOMAIN $VUE_AUTH0_DOMAIN
+ARG VUE_AUTH0_CALLBACK_REDIRECT
+ENV VUE_AUTH0_CALLBACK_REDIRECT $VUE_AUTH0_CALLBACK_REDIRECT
+ARG VUE_AUTH0_API_IDENTIFIER
+ENV VUE_AUTH0_API_IDENTIFIER $VUE_AUTH0_API_IDENTIFIER
+
 COPY frontend/package*.json ./
 RUN npm set audit false
 RUN npm install
@@ -9,7 +19,3 @@ RUN npm run build
 FROM nginx
 COPY docker/frontend/prod/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-##   cat /etc/nginx/nginx.conf
-#EXPOSE 80
-#CMD ["nginx", "-g", "daemon off;"]
