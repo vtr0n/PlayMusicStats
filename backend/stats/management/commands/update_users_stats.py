@@ -24,6 +24,7 @@ class Command(BaseCommand):
                 # TODO think about google apis problem
                 gm.oauth_login(user.current_device, credential)
                 library = gm.get_all_songs()
+                gm.logout()
 
                 new_stats = PlayMusicStats()
                 new_stats.user = user.user
@@ -31,8 +32,7 @@ class Command(BaseCommand):
                 new_stats.save()
 
                 self.stdout.write(self.style.SUCCESS('Stats for ' + str(user.user) + ' saved'))
-            except:
+            except Exception as e:
                 user.credential_is_valid = False
                 user.save()
-                self.stdout.write(self.style.ERROR('Credential for ' + str(user.user) + ' is invalid'))
-                continue
+                self.stdout.write(self.style.ERROR('Credential for ' + str(user.user) + ' is invalid: ' + str(e)))
