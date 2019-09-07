@@ -5,6 +5,7 @@ services:
     image: postgres
     volumes:
       - ./docker/postgres/data:/var/lib/postgresql/data
+    restart: always
     ports:
       - 5432:5432
     environment:
@@ -15,6 +16,7 @@ services:
     image: mongo:latest
     volumes:
       - ./docker/mongo/data:/data/db
+    restart: always
     ports:
       - 27017:27017
 
@@ -22,6 +24,7 @@ services:
     image: registry.gitlab.com/vtr0n/playmusicstats:DJANGO_latest
     command: "./entrypoint.sh"
     env_file: .env
+    restart: always
     ports:
       - "8000:8000"
     depends_on:
@@ -32,5 +35,6 @@ services:
     image: registry.gitlab.com/vtr0n/playmusicstats:VUE_latest
     command: "nginx -g 'daemon off;'"
     env_file: .env
+    restart: always
     ports:
       - "8080:80"
