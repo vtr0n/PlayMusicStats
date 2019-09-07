@@ -49,7 +49,7 @@
                 <h5 class="card-title">Listening time per week</h5>
                 <!--        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
                 <div id="app">
-                  <ve-line :data="chartData" :settings="chartSettings"></ve-line>
+                  <ve-line :data="chartData" :settings="chartSettings" :extend="chartExtend"></ve-line>
                 </div>
               </div>
             </div>
@@ -134,7 +134,15 @@
         data() {
             this.chartSettings = {
                 area: true
-            }
+            };
+            this.chartExtend = {
+                legend: {
+                    selected: {
+                        hours: true,
+                        minutes: false
+                    }
+                }
+            };
             return {
                 chartData: {
                     columns: ['date', 'hours', 'minutes'],
