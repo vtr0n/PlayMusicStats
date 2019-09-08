@@ -210,7 +210,10 @@ def get_graph(week_stats, days_delta):
 
     while stats_dict:
         key, value = stats_dict.popitem()
-        date_dict[key] = value['max'] - value['min']
+        try:
+            date_dict[key] = value['max'] - value['min']
+        except:
+            date_dict[key] = 0
 
     final_list = []
     while date_dict:
