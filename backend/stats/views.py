@@ -15,7 +15,7 @@ def get_stats(request):
     # TODO refactor queries
     # day before stats
     stats = PlayMusicStats.objects.filter(user_id=user_id,
-                                          date__range=[(time_now - timedelta(days=1)).date(), time_now]).order_by(
+                                          date__range=[time_now.date(), time_now]).order_by(
         'id')
     day_before_stats = stats[0].stats
     # week before stats
