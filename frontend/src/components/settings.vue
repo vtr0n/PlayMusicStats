@@ -21,7 +21,10 @@
               <b-button variant="info" @click="checkCode()" v-model="confirmButton">{{ confirmButton }}</b-button>
             </b-input-group-append>
           </b-input-group>
+          <br>
+          <br>
         </div>
+        <small>Site starts collecting statistics after entering the api, every hour the statistics are updated.</small>
       </div>
     </div>
   </div>
