@@ -47,7 +47,6 @@
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Listening time per week</h5>
-                <!--        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
                 <div id="app">
                   <ve-line :data="chartData" :settings="chartSettings" :extend="chartExtend"></ve-line>
                 </div>
@@ -59,8 +58,8 @@
         <br>
 
         <div class="row">
-          <div class="col-sm-3">
-            <div class="card">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Top artist by month</h5>
                 <b-table striped hover :items="items4" thead-class="hidden_header">
@@ -71,8 +70,8 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-3">
-            <div class="card">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Top artist for all time</h5>
                 <b-table striped hover :items="items2" thead-class="hidden_header">
@@ -83,8 +82,8 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-3">
-            <div class="card">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Top tracks by month</h5>
                 <b-table striped hover :items="items3" thead-class="hidden_header">
@@ -95,8 +94,8 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-3">
-            <div class="card">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Top tracks for all</h5>
                 <div>
