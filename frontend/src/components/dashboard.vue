@@ -4,7 +4,7 @@
     <app-nav></app-nav>
     <br>
     <div class="col-sm-12">
-      <div class="jumbotron text-center">
+      <div v-if="isLoggedIn()" class="jumbotron text-center">
         <div class="row">
           <div class="col-sm-3">
             <div class="card">
@@ -113,11 +113,31 @@
 
 
       </div>
+      <div v-else>
+        <b-jumbotron>
+          <template v-slot:header>Play Music Stats</template>
+
+          <template v-slot:lead>
+            This is a free, open source site that displays statistics for your google play music account.
+          </template>
+
+          <hr class="my-4">
+          <p>
+            Just log in, confirm your Google API key in the settings and watch the charts on the dashboard.
+          </p>
+          <p>
+            The site starts collecting statistics after confirming the API key, every hour it will be updated.
+          </p>
+          <b-button variant="primary" @click="handleLogin()">Sing In</b-button>
+          <b-button variant="success" href="https://github.com/vtr0n/PlayMusicStats">GitHub</b-button>
+        </b-jumbotron>
+      </div>
     </div>
   </div>
 </template>
 <script>
 
+    import {isLoggedIn, login} from '../../utils/auth';
     import VeLine from 'v-charts/lib/line.common'
     import AppNav from './AppNav';
     import {getStats} from '../../utils/django-api';
@@ -160,6 +180,12 @@
             }
         },
         methods: {
+            isLoggedIn() {
+                return isLoggedIn();
+            },
+            handleLogin() {
+                login();
+            },
             prettyTime(time) {
                 let allMusicDuration = 'Unknown';
                 if (time > 0) {
