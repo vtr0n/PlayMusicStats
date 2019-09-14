@@ -126,7 +126,8 @@
             Just log in, confirm your Google API key in the settings and watch the charts on the dashboard.
           </p>
           <p>
-            The site starts collecting statistics after confirming the API key, every hour it will be updated.
+            The site starts collecting statistics after confirming the API key, three times a day, statistics will be
+            updated.
           </p>
           <b-button variant="primary" @click="handleLogin()">Sing In</b-button>
           <b-button variant="success" href="https://github.com/vtr0n/PlayMusicStats">GitHub</b-button>

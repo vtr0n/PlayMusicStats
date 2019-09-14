@@ -24,8 +24,7 @@
           <br>
           <br>
         </div>
-        <small>The site starts collecting statistics after confirming the API key, every hour it will be
-          updated.</small>
+        <small>The site starts collecting statistics after confirming the API key. Three times a day, statistics will be updated.</small>
       </div>
     </div>
   </div>

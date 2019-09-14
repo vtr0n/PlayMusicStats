@@ -49,7 +49,7 @@ services:
   celery_worker:
     container_name: gms-celery
     <<: *backend
-    command: "celery worker -A backend.settings -l ERROR"
+    command: "celery worker -A backend.settings"
     ports: []
     depends_on:
       - redis

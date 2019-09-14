@@ -63,6 +63,10 @@ def prepare_library(library):
         new_song['artist'] = songs['artist']
         new_song['duration_millis'] = songs['durationMillis']
         try:
+            new_song['play_count'] = songs['playCount']
+        except:
+            new_song['play_count'] = 0
+        try:
             new_song['artist_id'] = songs['artistId'][0]
         except:
             new_song['artist_id'] = ''
@@ -75,6 +79,5 @@ def prepare_library(library):
         except:
             new_song['album_art_ref'] = ''
 
-        new_song['play_count'] = songs['playCount']
         new_library.append(new_song)
     return new_library
