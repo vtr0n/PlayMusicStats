@@ -8,3 +8,4 @@ class PlayMusicStats(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = MongoModels.DateTimeField(default=timezone.now, blank=True)
     stats = MongoModels.ListField(default=[])
+    total_time = models.FloatField(default=0.0)

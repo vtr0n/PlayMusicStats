@@ -1,6 +1,7 @@
 import json
 import os
 from unittest import TestCase
+from backend.stats.tasks import get_total_time_in_sec
 import backend.stats.views as stats_view
 
 
@@ -16,14 +17,8 @@ class ViewTestCase(TestCase):
         self.current_json = json.load(json_data)
 
     def test_get_total_time_in_sec(self):
-        self.assertEqual(stats_view.get_total_time_in_sec(self.previous_json), 9042570.0)
-        self.assertEqual(stats_view.get_total_time_in_sec(self.current_json), 9048243.0)
-
-    def test_get_time_diff_in_sec(self):
-        self.assertEqual(stats_view.get_time_diff_in_sec(self.current_json, self.current_json), 0.0)
-        self.assertEqual(stats_view.get_time_diff_in_sec(self.previous_json, self.previous_json), 0.0)
-        self.assertEqual(stats_view.get_time_diff_in_sec(self.previous_json, self.current_json), 5673.0)
-        self.assertEqual(stats_view.get_time_diff_in_sec(self.current_json, self.previous_json), -5673.0)
+        self.assertEqual(get_total_time_in_sec(self.previous_json), 9042570.0)
+        self.assertEqual(get_total_time_in_sec(self.current_json), 9048243.0)
 
     def test_top_tracks_for_all_time(self):
         valid_result_current = [{

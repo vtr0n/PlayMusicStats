@@ -18,7 +18,13 @@ services:
     ports:
       - 27017:27017
 
-  backend:
+  redis:
+    container_name: gms-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  backend: &backend
     container_name: gms-backend-container
     build:
       context: ./
@@ -36,6 +42,17 @@ services:
     ports:
       - "8000:8000"
     depends_on:
+      - postgres
+      - mongo
+      - celery_worker
+
+  celery_worker:
+    container_name: gms-celery
+    <<: *backend
+    command: "celery worker -A backend.settings -l ERROR"
+    ports: []
+    depends_on:
+      - redis
       - postgres
       - mongo
 
