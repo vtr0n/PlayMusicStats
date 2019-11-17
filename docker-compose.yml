@@ -2,7 +2,7 @@ version: '3.7'
 services:
   postgres:
     container_name: gms-postgres-container
-    image: postgres
+    image: postgres:11
     volumes:
       - ./docker/postgres/data:/var/lib/postgresql/data
     ports:
