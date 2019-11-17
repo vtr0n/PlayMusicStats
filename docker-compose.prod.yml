@@ -7,7 +7,7 @@ services:
       - ./docker/postgres/data:/var/lib/postgresql/data
     restart: always
     ports:
-      - 5432:5432
+      - 10000:5432
     environment:
       POSTGRES_PASSWORD: root
 
@@ -18,14 +18,14 @@ services:
       - ./docker/mongo/data:/data/db
     restart: always
     ports:
-      - 27017:27017
+      - 10001:27017
 
   redis:
     container_name: gms-redis
     image: redis:latest
     restart: always
     ports:
-      - "6379:6379"
+      - "10002:6379"
 
   backend: &backend
     image: registry.gitlab.com/vtr0n/playmusicstats:DJANGO_latest
@@ -33,7 +33,7 @@ services:
     env_file: .env
     restart: always
     ports:
-      - "8000:8000"
+      - "10003:8000"
     depends_on:
       - postgres
       - mongo
@@ -54,4 +54,4 @@ services:
     env_file: .env
     restart: always
     ports:
-      - "8080:80"
+      - "10004:80"
